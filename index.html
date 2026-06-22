@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NEXT_STEP — วางเส้นทางเข้ามหาลัย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="canvas">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">◆</span> NEXT_STEP</div>
+    <nav class="crumbs" id="crumbs"></nav>
+  </header>
+
+  <main id="stage" class="stage">
+
+    <!-- 1. CREATE PATH -->
+    <section class="view" data-view="create-path">
+      <div class="view-head">
+        <p class="eyebrow">STEP 01 · เริ่มต้น</p>
+        <h1>สร้างเส้นทางของคุณ</h1>
+        <p class="sub">แต่ละ path คือหนึ่งแผนการเข้ามหาลัย ตั้งชื่อได้ตามใจ แล้วเพิ่มได้เรื่อยๆ</p>
+      </div>
+      <div class="path-list" id="pathList"></div>
+      <button class="add-path" id="addPathBtn">
+        <span class="plus">+</span> เพิ่ม path ใหม่
+      </button>
+    </section>
+
+    <!-- 2. NAME PATH -->
+    <section class="view" data-view="name-path" hidden>
+      <div class="view-head">
+        <p class="eyebrow">STEP 02 · ตั้งชื่อ</p>
+        <h1>ตั้งชื่อ path นี้ว่าอะไรดี?</h1>
+        <p class="sub">เช่น "แผนหมอ", "สายอินเตอร์", "เผื่อเลือก"</p>
+      </div>
+      <div class="name-box">
+        <input id="pathNameInput" class="name-input" type="text" placeholder="พิมพ์ชื่อ path…" maxlength="40" autocomplete="off" />
+        <div class="row-actions">
+          <button class="btn ghost" data-back="create-path">ย้อนกลับ</button>
+          <button class="btn primary" id="savePathBtn">สร้าง path</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TRACK -->
+    <section class="view" data-view="track" hidden>
+      <div class="view-head">
+        <p class="eyebrow">STEP 03 · ข้อมูลของคุณ</p>
+        <h1>เรียนอยู่สายอะไร?</h1>
+        <p class="sub">เราจะกรองเฉพาะหลักสูตรที่รับสายของคุณ</p>
+      </div>
+      <div class="track-group">
+        <p class="group-label">หลักสูตรแกนกลาง</p>
+        <div class="track-options">
+          <button class="track-opt" data-track="accepts_sci_math" data-label="วิทย์–คณิต">วิทย์–คณิต</button>
+          <button class="track-opt" data-track="accepts_arts" data-label="ศิลป์">ศิลป์</button>
+        </div>
+        <p class="group-label">หลักสูตรอาชีวศึกษา</p>
+        <div class="track-options">
+          <button class="track-opt" data-track="accepts_vocational" data-label="เทคนิค / อาชีวะ (ปวช.)">เทคนิค / อาชีวะ (ปวช.)</button>
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="btn ghost" data-back="create-path">ย้อนกลับ</button>
+      </div>
+    </section>
+
+    <!-- 4a. FACULTY -->
+    <section class="view" data-view="faculty" hidden>
+      <div class="view-head">
+        <p class="eyebrow">STEP 04 · เลือกคณะ</p>
+        <h1>อยากเข้าคณะอะไร?</h1>
+        <p class="sub" id="facultySub">คณะที่มีหลักสูตรรับสายของคุณ</p>
+      </div>
+      <div class="faculty-grid" id="facultyGrid"></div>
+      <div class="row-actions">
+        <button class="btn ghost" data-back="track">ย้อนกลับ</button>
+      </div>
+    </section>
+
+    <!-- 4b. PROGRAM LIST -->
+    <section class="view" data-view="programs" hidden>
+      <div class="view-head with-filter">
+        <div>
+          <p class="eyebrow">STEP 04 · ทั้งหมดเกี่ยวกับ</p>
+          <h1 id="programHead">"ชื่อคณะ"</h1>
+        </div>
+        <button class="funnel" id="funnelBtn" title="เรียง / กรอง" aria-label="เรียงและกรอง">▽</button>
+      </div>
+      <div class="filter-bar" id="filterBar" hidden>
+        <span class="filter-label">เรียงตาม</span>
+        <button class="chip active" data-sort="tuition-asc">ค่าเทอม น้อย→มาก</button>
+        <button class="chip" data-sort="tuition-desc">ค่าเทอม มาก→น้อย</button>
+        <button class="chip" data-sort="name">ชื่อมหาลัย ก–ฮ</button>
+        <button class="chip" data-sort="region">ภูมิภาค</button>
+      </div>
+      <div class="program-list" id="programList"></div>
+      <div class="row-actions">
+        <button class="btn ghost" data-back="faculty">ย้อนกลับ</button>
+      </div>
+    </section>
+
+    <!-- 5. COOKING -->
+    <section class="view view-center" data-view="cooking" hidden>
+      <div class="cook">
+        <div class="cook-art">🍳</div>
+        <h1>Let me cook!</h1>
+        <p class="sub">กำลังสร้างเส้นทางของคุณ…</p>
+        <div class="dots"><span></span><span></span><span></span><span></span></div>
+      </div>
+    </section>
+
+    <!-- 6. ROADMAP -->
+    <section class="view" data-view="roadmap" hidden>
+      <div class="view-head">
+        <p class="eyebrow" id="roadmapPathName">PATH</p>
+        <h1 id="roadmapHead">Road map</h1>
+        <p class="sub" id="roadmapSub"></p>
+      </div>
+
+      <div class="roadmap-cols">
+        <div class="roadmap-col">
+          <h2 class="col-title">รอบรับสมัคร TCAS</h2>
+          <div class="rounds" id="rounds"></div>
+        </div>
+        <div class="roadmap-col">
+          <h2 class="col-title">สิ่งที่ควรทำระหว่างเตรียมตัว</h2>
+          <ol class="timeline" id="timeline"></ol>
+        </div>
+      </div>
+
+      <div class="row-actions">
+        <button class="btn ghost" data-back="programs">เลือกหลักสูตรอื่น</button>
+        <button class="btn primary" id="restartBtn">เริ่ม path ใหม่</button>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
